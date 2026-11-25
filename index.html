@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>С Днем Рождения! ❤️</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <!-- Библиотека для конфетти -->
+    <script src="https://jsdelivr.net"></script>
+    <style>
+        :root {
+            --bg-color: #fdf8f5;
+            --text-color: #2c2a29;
+            --accent-color: #d96b66;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Первый экран */
+        header {
+            min-height: 75vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            background: radial-gradient(circle at center, #fff0eb 0%, var(--bg-color) 70%);
+        }
+
+        .date-badge {
+            background: var(--card-bg);
+            color: var(--accent-color);
+            padding: 8px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            letter-spacing: 2px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--accent-color);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            max-width: 520px;
+            opacity: 0.85;
+        }
+
+        /* Основной контейнер */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Блок с поздравлением */
+        .letter {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            margin-bottom: 60px;
+            font-size: 1.05rem;
+        }
+
+        .letter p {
+            margin-bottom: 18px;
+        }
+
+        .letter p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Галерея полароидов */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .polaroid {
+            background: var(--card-bg);
+            padding: 15px 15px 25px 15px;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .polaroid:nth-child(odd) { transform: rotate(-2deg); }
+        .polaroid:nth-child(even) { transform: rotate(2deg); }
+        .polaroid:hover { transform: scale(1.03) rotate(0deg); }
+
+        .polaroid img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            background-color: #f0ebe8;
+        }
+
+        .caption {
+            font-family: 'Caveat', cursive;
+            font-size: 1.6rem;
+            text-align: center;
+            color: #444;
+            line-height: 1.2;
+        }
+
+        /* Интерактивная кнопка в конце */
+        .surprise-section {
+            text-align: center;
+            padding-bottom: 80px;
+        }
+
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 16px 36px;
+            font-size: 1.1rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(217, 107, 102, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(217, 107, 102, 0.4);
+        }
+
+        #secret-message {
+            display: none;
+            margin-top: 25px;
+            padding: 25px;
+            background: #fff0eb;
+            border-radius: 16px;
+            font-weight: 600;
+            color: var(--accent-color);
+            animation: fadeIn 0.6s ease;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Анимация появления при скролле */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.1rem; }
+            .letter { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="date-badge">28.11.2026</div>
+        <h1>С Днем Рождения, любимый!</h1>
+        <p class="subtitle">Маленькая страница о том, как сильно я тебя ценю и сколько крутых моментов у нас уже было.</p>
+    </header>
+
+    <div class="container">
+        <!-- Блок с письмом -->
+        <section class="letter reveal">
+            <p>Привет! Я решила сделать для тебя что-то особенное вместо обычной открытки.</p>
+            <p>Здесь напиши свой основной текст поздравления. Можешь разбить его на несколько абзацев — каждый абзац оборачивай в теги &lt;p&gt; и &lt;/p&gt;, чтобы текст легко читался.</p>
+            <p>Пусть этот год принесет тебе кучу крутых идей, энергии и поводов для улыбки. А я всегда буду рядом ❤️</p>
+        </section>
+
+        <!-- Галерея из 6 фото -->
+        <section class="gallery reveal">
+            <div class="polaroid">
+                <img src="photo1.jpg" alt="Фото 1">
+                <div class="caption">Подпись к первому фото</div>
+            </div>
+
+            <div class="polaroid">
+                <img src="photo2.jpg" alt="Фото 2">
+                <div class="caption">Подпись ко второму фото</div>
+            </div>
+
+            <div class="polaroid">
+                <img src="photo3.jpg" alt="Фото 3">
+                <div class="caption">Подпись к третьему фото</div>
+            </div>
+
+            <div class="polaroid">
+                <img src="photo4.jpg" alt="Фото 4">
+                <div class="caption">Подпись к четвертому фото</div>
+            </div>
+
+            <div class="polaroid">
+                <img src="photo5.jpg" alt="Фото 5">
+                <div class="caption">Подпись к пятому фото</div>
+            </div>
+
+            <div class="polaroid">
+                <img src="photo6.jpg" alt="Фото 6">
+                <div class="caption">Подпись к шестому фото</div>
+            </div>
+        </section>
+
+        <!-- Сюрприз в конце -->
+        <section class="surprise-section reveal">
+            <button class="btn" onclick="showSurprise()">Нажми, чтобы открыть сюрприз 🎁</button>
+            <div id="secret-message">
+                Твой главный подарок уже ждет тебя! Собирайся в [время], мы едем в [секретное место] (или напиши сюда свой текст сюрприза) ❤️
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // АНИМАЦИЯ ПРИ СКРОЛЛЕ
+        function reveal() {
+            const reveals = document.querySelectorAll(".reveal");
+            for (let i = 0; i < reveals.length; i++) {
+                const windowHeight = window.innerHeight;
+                const elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 80) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal();
+
+        // КНОПКА СЮРПРИЗА + КОНФЕТТИ
+        function showSurprise() {
+            const msg = document.getElementById("secret-message");
+            msg.style.display = "block";
+            
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+    </script>
+</body>
+</html>
