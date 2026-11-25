@@ -26,6 +26,18 @@
             overflow-x: hidden;
         }
 
+        /* 2. Прогресс-бар чтения в самом верху */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f4a261, var(--accent-color));
+            width: 0%;
+            z-index: 10000;
+            transition: width 0.1s ease-out;
+        }
+
         #confetti-canvas {
             position: fixed;
             top: 0;
@@ -36,8 +48,10 @@
             z-index: 9999;
         }
 
+        /* Первый экран и 3. Плавающие сердечки */
         header {
-            min-height: 75vh;
+            position: relative;
+            min-height: 78vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -45,9 +59,47 @@
             text-align: center;
             padding: 20px;
             background: radial-gradient(circle at center, #fff0eb 0%, var(--bg-color) 70%);
+            overflow: hidden;
+        }
+
+        .floating-hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -30px;
+            color: var(--accent-color);
+            opacity: 0;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(0.8) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.25;
+            }
+            80% {
+                opacity: 0.15;
+            }
+            100% {
+                transform: translateY(-85vh) scale(1.2) rotate(25deg);
+                opacity: 0;
+            }
         }
 
         .date-badge {
+            position: relative;
+            z-index: 2;
             background: var(--card-bg);
             color: var(--accent-color);
             padding: 8px 24px;
@@ -60,6 +112,8 @@
         }
 
         h1 {
+            position: relative;
+            z-index: 2;
             font-size: 2.6rem;
             font-weight: 700;
             margin-bottom: 15px;
@@ -68,6 +122,8 @@
         }
 
         .subtitle {
+            position: relative;
+            z-index: 2;
             font-size: 1.1rem;
             max-width: 520px;
             opacity: 0.85;
@@ -81,39 +137,35 @@
 
         .letter {
             background: var(--card-bg);
-            padding: 40px;
+            padding: 35px 40px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.04);
             margin-bottom: 60px;
-            font-size: 1.05rem;
+            font-size: 1.15rem;
+            font-variant: small-caps;
+            text-align: center;
         }
 
         .letter p {
-            margin-bottom: 18px;
+            margin-bottom: 14px;
         }
 
         .letter p:last-child {
             margin-bottom: 0;
         }
 
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 30px;
-            margin-bottom: 60px;
-        }
-
         .polaroid {
+            position: relative;
             background: var(--card-bg);
             padding: 15px 15px 35px 15px;
             border-radius: 8px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .polaroid:nth-child(odd) { transform: rotate(-2deg); }
-        .polaroid:nth-child(even) { transform: rotate(2deg); }
-        .polaroid:hover { transform: scale(1.03) rotate(0deg); }
+        .polaroid:hover {
+            transform: scale(1.02) rotate(0deg) !important;
+        }
 
         .polaroid img {
             width: 100%;
@@ -122,6 +174,20 @@
             border-radius: 4px;
             display: block;
             background-color: #f0ebe8;
+        }
+
+        /* 1. Особое оформление для 6-й финальной фотки */
+        .polaroid-special {
+            border: 2px solid #f7d6d0;
+            box-shadow: 0 14px 40px rgba(217, 107, 102, 0.25);
+        }
+
+        .polaroid-special::after {
+            content: "❤️";
+            position: absolute;
+            bottom: 6px;
+            right: 14px;
+            font-size: 1.3rem;
         }
 
         .surprise-section {
@@ -161,15 +227,17 @@
 
         @media (max-width: 600px) {
             h1 { font-size: 2rem; }
-            .letter { padding: 25px; }
+            .letter { padding: 25px 20px; }
         }
     </style>
 </head>
 <body>
 
+    <div id="scroll-progress"></div>
     <canvas id="confetti-canvas"></canvas>
 
     <header>
+        <div class="floating-hearts" id="hearts-container"></div>
         <div class="date-badge">28.11.2026</div>
         <h1>С Днем Рождения, любимый!</h1>
         <p class="subtitle">Маленькая страница о том, как сильно я тебя ценю и сколько крутых моментов у нас уже было.</p>
@@ -177,7 +245,7 @@
 
     <div class="container">
         <!-- Вступительный текст -->
-        <section class="letter reveal" style="font-variant: small-caps; font-size: 1.15rem; text-align: center;">
+        <section class="letter reveal">
             <p>Мы с тобой давно вместе, пускай у нас не так уж и много совместных фоток, но совместных воспоминаний у нас гораздо больше.</p>
         </section>
 
@@ -187,7 +255,7 @@
                 <img src="photo1.jpg" alt="Фото 1">
             </div>
         </div>
-        <section class="letter reveal" style="font-variant: small-caps; font-size: 1.15rem; text-align: center;">
+        <section class="letter reveal">
             <p>Фотка, которую ты видишь сверху – первая наша совместная.</p>
         </section>
 
@@ -197,7 +265,7 @@
                 <img src="photo2.jpg" alt="Фото 2">
             </div>
         </div>
-        <section class="letter reveal" style="font-variant: small-caps; font-size: 1.15rem; text-align: center;">
+        <section class="letter reveal">
             <p>Эта фотка сама по себе имеет большое значение для нас с тобой. В то время мы постоянно гуляли на той железной дороге, помнишь? За то лето много чего поменялось.</p>
         </section>
 
@@ -207,7 +275,7 @@
                 <img src="photo3.jpg" alt="Фото 3">
             </div>
         </div>
-        <section class="letter reveal" style="font-variant: small-caps; font-size: 1.15rem; text-align: center;">
+        <section class="letter reveal">
             <p>На этой фотке были хорошие моменты наших отношений. Зима 2026 надолго мне запомнится.</p>
         </section>
 
@@ -217,7 +285,7 @@
                 <img src="photo4.jpg" alt="Фото 4">
             </div>
         </div>
-        <section class="letter reveal" style="font-variant: small-caps; font-size: 1.15rem; text-align: center;">
+        <section class="letter reveal">
             <p>Все та же зима 2026.<br>В тот день мы гуляли по замерзшему озеру и писали на снегу, это так же сильно мне запомнилось.</p>
         </section>
 
@@ -227,28 +295,47 @@
                 <img src="photo5.jpg" alt="Фото 5">
             </div>
         </div>
-        <section class="letter reveal" style="font-variant: small-caps; font-size: 1.15rem; text-align: center;">
+        <section class="letter reveal">
             <p>Просто один из веселых моментов. Надеюсь, ты помнишь, как я встречала тебя пять дней подряд в этой маске.</p>
         </section>
 
-        <!-- 6 фотка (в исходном формате) + текст -->
+        <!-- 6 фотка (финальный кадр в исходном формате) + текст -->
         <div class="reveal" style="max-width: 380px; margin: 0 auto 30px auto;">
-            <div class="polaroid" style="transform: rotate(1deg);">
+            <div class="polaroid polaroid-special" style="transform: rotate(1deg);">
                 <img src="photo6.jpg" alt="Фото 6" style="height: auto; object-fit: contain;">
             </div>
         </div>
-        <section class="letter reveal" style="font-variant: small-caps; font-size: 1.15rem; text-align: center;">
+        <section class="letter reveal">
             <p>Первая наша совместная фотка вчетвером.<br>Я рада, что мы все в конце концов нашли общий язык, пускай Богдан не такой уж и спокойный человек)</p>
         </section>
 
-        <!-- Кнопка салюта -->
+        <!-- Кнопка тройного салюта -->
         <section class="surprise-section reveal">
-            <button class="btn" onclick="launchConfetti()">Запустить праздничный салют 🎉</button>
+            <button class="btn" onclick="tripleSalute()">Запустить праздничный салют 🎉</button>
         </section>
     </div>
 
     <script>
-        function reveal() {
+        // Генерация плавающих сердечек в шапке
+        const heartsContainer = document.getElementById('hearts-container');
+        for (let i = 0; i < 14; i++) {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerText = '♥';
+            heart.style.left = Math.random() * 95 + '%';
+            heart.style.fontSize = (Math.random() * 14 + 12) + 'px';
+            heart.style.animationDuration = (Math.random() * 6 + 7) + 's';
+            heart.style.animationDelay = (Math.random() * 6) + 's';
+            heartsContainer.appendChild(heart);
+        }
+
+        // Прогресс-бар чтения и плавное появление блоков
+        function handleScroll() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress").style.width = scrolled + "%";
+
             const reveals = document.querySelectorAll(".reveal");
             for (let i = 0; i < reveals.length; i++) {
                 const windowHeight = window.innerHeight;
@@ -258,58 +345,69 @@
                 }
             }
         }
-        window.addEventListener("scroll", reveal);
-        reveal();
+        window.addEventListener("scroll", handleScroll);
+        handleScroll();
 
-        function launchConfetti() {
-            const canvas = document.getElementById('confetti-canvas');
-            const ctx = canvas.getContext('2d');
+        // 5. Тройной залп конфетти (слева, справа и из центра)
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        let pieces = [];
+        let animId = null;
+
+        function spawnBurst(originX, originY, count) {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-
             const colors = ['#d96b66', '#f4a261', '#e9c46a', '#2a9d8f', '#e76f51', '#ff8fa3'];
-            const pieces = [];
 
-            for (let i = 0; i < 120; i++) {
+            for (let i = 0; i < count; i++) {
                 pieces.push({
-                    x: canvas.width / 2,
-                    y: canvas.height * 0.6,
+                    x: originX,
+                    y: originY,
                     w: Math.random() * 10 + 5,
                     h: Math.random() * 6 + 4,
-                    vx: (Math.random() - 0.5) * 18,
-                    vy: (Math.random() - 1) * 18 - 4,
+                    vx: (Math.random() - 0.5) * 20,
+                    vy: (Math.random() - 1) * 19 - 5,
                     color: colors[Math.floor(Math.random() * colors.length)],
                     angle: Math.random() * 360,
-                    spin: (Math.random() - 0.5) * 12
+                    spin: (Math.random() - 0.5) * 14
                 });
             }
+            if (!animId) animateConfetti();
+        }
 
-            let frame = 0;
-            function animate() {
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            pieces.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.42;
+                p.vx *= 0.985;
+                p.angle += p.spin;
+
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.angle * Math.PI / 180);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+                ctx.restore();
+            });
+
+            pieces = pieces.filter(p => p.y < canvas.height + 40);
+
+            if (pieces.length > 0) {
+                animId = requestAnimationFrame(animateConfetti);
+            } else {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                pieces.forEach(p => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.vy += 0.45;
-                    p.vx *= 0.98;
-                    p.angle += p.spin;
-
-                    ctx.save();
-                    ctx.translate(p.x, p.y);
-                    ctx.rotate(p.angle * Math.PI / 180);
-                    ctx.fillStyle = p.color;
-                    ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-                    ctx.restore();
-                });
-
-                frame++;
-                if (frame < 140) {
-                    requestAnimationFrame(animate);
-                } else {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                }
+                animId = null;
             }
-            animate();
+        }
+
+        function tripleSalute() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            spawnBurst(w * 0.25, h * 0.65, 80);
+            setTimeout(() => spawnBurst(w * 0.75, h * 0.65, 80), 300);
+            setTimeout(() => spawnBurst(w * 0.5, h * 0.55, 110), 600);
         }
     </script>
 </body>
